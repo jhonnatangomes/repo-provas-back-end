@@ -3,12 +3,14 @@ import { SendExam } from '../protocols/examInterface';
 import { Validation } from '../protocols/validationInterface';
 
 const schema = Joi.object({
-    examName: Joi.string().required(),
+    name: Joi.string().required(),
     category: Joi.string().required(),
     semester: Joi.string().required(),
     subject: Joi.string().required(),
     teacher: Joi.string().required(),
-    link: Joi.string().pattern(/(http|https).*\.pdf/).required(),
+    link: Joi.string()
+        .pattern(/(http|https).*\.pdf/)
+        .required(),
 });
 
 export default function validateExam(body: SendExam): Validation {

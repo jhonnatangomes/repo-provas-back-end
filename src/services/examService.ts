@@ -7,8 +7,8 @@ import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 
-async function sendExam(exam: SendExam) {
-    const { examName, category, semester, subject, teacher, link } = exam;
+async function sendExam(exam: SendExam): Promise<SendExam> {
+    const { name, category, semester, subject, teacher, link } = exam;
     const categoryResult = await getRepository(CategoryEntity).find({
         name: category,
     });
@@ -26,7 +26,7 @@ async function sendExam(exam: SendExam) {
     });
 
     const result = getRepository(ExamEntity).create({
-        name: examName,
+        name,
         category: categoryResult[0],
         semester: semesterResult[0],
         subject: subjectResult[0],

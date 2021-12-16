@@ -1,5 +1,5 @@
 interface SendExam {
-    examName: string;
+    name: string;
     category: string;
     semester: string;
     subject: string;
