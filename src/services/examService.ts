@@ -1,7 +1,6 @@
 import { SendExam } from '../protocols/examInterface';
 import { getRepository } from 'typeorm';
 import { ExamEntity } from '../entities/ExamEntity';
-import { APIError } from '../errors/APIError';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';

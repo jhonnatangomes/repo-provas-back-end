@@ -9,4 +9,11 @@ interface InfoSent {
     subjects: Info[];
 }
 
-export { Info, InfoSent };
+interface TeacherInfo {
+    teacher_id: number;
+    teacher_name: string;
+    subject_id: number;
+    subject_name: string;
+}
+
+export { Info, InfoSent, TeacherInfo };
