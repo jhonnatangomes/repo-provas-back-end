@@ -1,14 +1,17 @@
-import { NextFunction, Request, Response } from "express";
-import validateExam from "../validations/validateExam";
+import { NextFunction, Request, Response } from 'express';
+import validateExam from '../validations/validateExam';
+import * as examService from '../services/examService';
 
 async function sendExam(req: Request, res: Response, next: NextFunction) {
     try {
         const examValid = validateExam(req.body);
-        if(!examValid.isValid) {
+        if (!examValid.isValid) {
             return res.status(400).send(examValid.message);
         }
 
-        return res.send('okay');
+        const result = await examService.sendExam(req.body);
+
+        return res.send(result);
     } catch (error) {
         return next(error);
     }
