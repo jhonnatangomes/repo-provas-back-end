@@ -10,4 +10,14 @@ async function getInfo(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { getInfo };
+async function getTeachers(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { subject } = req.query;
+        const result = await infoService.getTeachers(subject.toString());
+        return res.send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export { getInfo, getTeachers };

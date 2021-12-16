@@ -9,4 +9,4 @@ interface InfoSent {
     subjects: Info[];
 }
 
-export { InfoSent };
+export { Info, InfoSent };

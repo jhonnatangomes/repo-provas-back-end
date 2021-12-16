@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    JoinColumn,
+} from 'typeorm';
+import { TeacherEntity } from './TeacherEntity';
 
 @Entity('subjects')
 export class SubjectEntity {
@@ -7,4 +14,7 @@ export class SubjectEntity {
 
     @Column()
     name: string;
+
+    @ManyToMany(() => TeacherEntity, (teacher) => teacher.subjects)
+    teachers: TeacherEntity[];
 }
