@@ -39,18 +39,6 @@ export class ExamEntity {
 
     getExam() {
         return {
-            id: this.id,
-            name: this.name,
-            category: this.category.name,
-            subject: this.subject.name,
-            teacher: this.teacher.name,
-            semester: this.semester.name,
-            link: this.link,
-        };
-    }
-
-    getExamWithoutId() {
-        return {
             name: this.name,
             category: this.category.name,
             subject: this.subject.name,

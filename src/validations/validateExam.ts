@@ -9,7 +9,7 @@ const schema = Joi.object({
     subject: Joi.string().required(),
     teacher: Joi.string().required(),
     link: Joi.string()
-        .pattern(/(http|https).*\.pdf/)
+        .pattern(/(http|https):\/\/.+\.pdf/)
         .required(),
 });
 
