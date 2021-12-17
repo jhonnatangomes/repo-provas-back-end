@@ -54,11 +54,11 @@ async function createExam(): Promise<SendExam> {
 
 async function createTeacherAndSubject(): Promise<TeacherInfo> {
     const subject = getRepository(SubjectEntity).create({
-        name: faker.datatype.string(),
+        name: faker.random.alphaNumeric(30),
     });
 
     const teacher = getRepository(TeacherEntity).create({
-        name: faker.datatype.string(),
+        name: faker.random.alphaNumeric(30),
     });
 
     await getRepository(SubjectEntity).save(subject);
@@ -71,14 +71,21 @@ async function createTeacherAndSubject(): Promise<TeacherInfo> {
 
     return {
         teacher: {
-            id: teacher.id,
             name: teacher.name,
         },
         subject: {
-            id: subject.id,
             name: subject.name,
         },
     };
 }
 
-export { createIncorrectExam, createExam, createTeacherAndSubject };
+function stringFactory() {
+    return faker.datatype.string();
+}
+
+export {
+    createIncorrectExam,
+    createExam,
+    createTeacherAndSubject,
+    stringFactory,
+};

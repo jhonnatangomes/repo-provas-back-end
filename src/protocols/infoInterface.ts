@@ -1,5 +1,4 @@
 interface Info {
-    id: number;
     name: string;
 }
 
@@ -18,11 +17,9 @@ interface TeacherInfoQuery {
 
 interface TeacherInfo {
     teacher: {
-        id: number;
         name: string;
     };
     subject: {
-        id: number;
         name: string;
     };
 }

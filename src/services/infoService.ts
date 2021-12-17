@@ -15,9 +15,9 @@ async function getInfo(): Promise<InfoSent> {
     const subjects = await getRepository(SubjectEntity).find();
 
     return {
-        categories,
-        semesters,
-        subjects,
+        categories: categories.map((el) => ({ name: el.name })),
+        semesters: semesters.map((el) => ({ name: el.name })),
+        subjects: subjects.map((el) => ({ name: el.name })),
     };
 }
 
@@ -30,11 +30,9 @@ async function getTeachers(subject: string): Promise<TeacherInfo[]> {
 
     return result.map((el) => ({
         teacher: {
-            id: el.teachers_id,
             name: el.teachers_name,
         },
         subject: {
-            id: el.subjects_id,
             name: el.subjects_name,
         },
     }));
