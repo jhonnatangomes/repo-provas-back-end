@@ -32,6 +32,6 @@ describe('post /provas', () => {
         });
 
         expect(result.status).toEqual(200);
-        expect(examInDb[0].getExamWithoutId()).toEqual(exam);
+        expect(result.body).toEqual(examInDb[0].getExam());
     });
 });

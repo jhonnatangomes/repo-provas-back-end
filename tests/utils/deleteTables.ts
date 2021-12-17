@@ -3,9 +3,16 @@ import { CategoryEntity } from '../../src/entities/CategoryEntity';
 import { ExamEntity } from '../../src/entities/ExamEntity';
 import { SemesterEntity } from '../../src/entities/SemesterEntity';
 import { SubjectEntity } from '../../src/entities/SubjectEntity';
+import { SubjectTeacherEntity } from '../../src/entities/SubjectTeacherEntity';
 import { TeacherEntity } from '../../src/entities/TeacherEntity';
 
 async function deleteTables() {
+    await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(SubjectTeacherEntity)
+        .execute();
+
     await getConnection()
         .createQueryBuilder()
         .delete()

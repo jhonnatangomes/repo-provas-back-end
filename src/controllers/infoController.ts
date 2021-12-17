@@ -12,8 +12,11 @@ async function getInfo(req: Request, res: Response, next: NextFunction) {
 
 async function getTeachers(req: Request, res: Response, next: NextFunction) {
     try {
-        const { subject } = req.query;
-        const result = await infoService.getTeachers(subject.toString());
+        const { disciplina } = req.query;
+        if (!disciplina) {
+            return res.status(400).send('subject required');
+        }
+        const result = await infoService.getTeachers(disciplina.toString());
         return res.send(result);
     } catch (error) {
         return next(error);

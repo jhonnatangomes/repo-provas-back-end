@@ -9,11 +9,22 @@ interface InfoSent {
     subjects: Info[];
 }
 
-interface TeacherInfo {
-    teacher_id: number;
-    teacher_name: string;
-    subject_id: number;
-    subject_name: string;
+interface TeacherInfoQuery {
+    teachers_id: number;
+    teachers_name: string;
+    subjects_id: number;
+    subjects_name: string;
 }
 
-export { Info, InfoSent, TeacherInfo };
+interface TeacherInfo {
+    teacher: {
+        id: number;
+        name: string;
+    };
+    subject: {
+        id: number;
+        name: string;
+    };
+}
+
+export { Info, InfoSent, TeacherInfoQuery, TeacherInfo };
