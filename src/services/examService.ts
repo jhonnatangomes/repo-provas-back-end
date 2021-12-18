@@ -6,6 +6,8 @@ import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
+import { groupByCategory } from '../helpers/groupByCategory';
+import { CategoryGroupWithTeacher } from '../protocols/groupByCategoryInterface';
 
 async function sendExam(exam: SendExam): Promise<SendExam> {
     const { name, category, semester, subject, teacher, link } = exam;
@@ -72,14 +74,17 @@ async function getExams(filter: string): Promise<ExamFiltered[]> {
         .filter((el) => el.amount !== 0);
 }
 
-async function getExamsByTeacherId(teacherId: number) {
-    const result = await getRepository(CategoryEntity).find({
-        relations: ['exams'],
+async function getExamsByTeacherId(
+    teacherId: number
+): Promise<CategoryGroupWithTeacher> {
+    const result = await getRepository(ExamEntity).find({
+        where: { teacher: { id: teacherId } },
+        order: { category: 'ASC' },
     });
 
-    return result
-        .map((el) => el.getExamsByTeacherId(teacherId))
-        .filter((el) => el.exams.length);
+    const formattedResult = result.map((el) => el.getExam());
+
+    return groupByCategory(formattedResult);
 }
 
 export { sendExam, getExams, getExamsByTeacherId };
