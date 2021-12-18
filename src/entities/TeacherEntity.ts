@@ -17,7 +17,7 @@ export class TeacherEntity {
     @Column()
     name: string;
 
-    @OneToMany(() => ExamEntity, (exam) => exam.teacher, { eager: true })
+    @OneToMany(() => ExamEntity, (exam) => exam.teacher)
     exams: ExamEntity[];
 
     @ManyToMany(() => SubjectEntity, (subject) => subject.teachers)
@@ -32,7 +32,7 @@ export class TeacherEntity {
     })
     subjects: SubjectEntity[];
 
-    getExams() {
-        return { name: this.name, amount: this.exams.length };
+    getExamAmounts() {
+        return { id: this.id, name: this.name, amount: this.exams.length };
     }
 }

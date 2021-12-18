@@ -22,11 +22,11 @@ export class ExamEntity {
     @JoinColumn({ name: 'category_id' })
     category: CategoryEntity;
 
-    @ManyToOne(() => SubjectEntity)
+    @ManyToOne(() => SubjectEntity, { eager: true })
     @JoinColumn({ name: 'subject_id' })
     subject: SubjectEntity;
 
-    @ManyToOne(() => TeacherEntity)
+    @ManyToOne(() => TeacherEntity, { eager: true })
     @JoinColumn({ name: 'teacher_id' })
     teacher: TeacherEntity;
 
@@ -44,6 +44,15 @@ export class ExamEntity {
             subject: this.subject.name,
             teacher: this.teacher.name,
             semester: this.semester.name,
+            link: this.link,
+        };
+    }
+
+    getExamWithoutSemesterAndCategory() {
+        return {
+            name: this.name,
+            subject: this.subject.name,
+            teacher: this.teacher,
             link: this.link,
         };
     }

@@ -30,4 +30,20 @@ async function getExams(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { sendExam, getExams };
+async function getExamsByTeacherId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const { id } = req.params;
+        const teacherId = Number(id);
+
+        const result = await examService.getExamsByTeacherId(teacherId);
+        return res.send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export { sendExam, getExams, getExamsByTeacherId };
