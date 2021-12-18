@@ -7,7 +7,20 @@ import { TeacherEntity } from '../../src/entities/TeacherEntity';
 import { SubjectTeacherEntity } from '../../src/entities/SubjectTeacherEntity';
 import { SendExam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
+import { ExamEntity } from '../../src/entities/ExamEntity';
 faker.locale = 'pt_BR';
+
+interface Info {
+    id: number;
+    name: string;
+}
+
+interface AllInfo {
+    category: Info;
+    semester: Info;
+    subject: Info;
+    teacher: Info;
+}
 
 function createIncorrectExam() {
     return {
@@ -20,7 +33,7 @@ function createIncorrectExam() {
     };
 }
 
-async function createExam(): Promise<SendExam> {
+async function createInfo(): Promise<AllInfo> {
     const category = getRepository(CategoryEntity).create({
         name: faker.datatype.string(),
     });
@@ -43,12 +56,50 @@ async function createExam(): Promise<SendExam> {
     await getRepository(TeacherEntity).save(teacher);
 
     return {
-        name: faker.datatype.string(),
+        category,
+        semester,
+        subject,
+        teacher,
+    };
+}
+
+async function getInfo(): Promise<SendExam> {
+    const { category, semester, subject, teacher } = await createInfo();
+
+    const name = faker.datatype.string();
+    const link = `https://${faker.random.alphaNumeric(30)}.pdf`;
+
+    return {
+        name,
         category: category.name,
         semester: semester.name,
         subject: subject.name,
         teacher: teacher.name,
-        link: `https://${faker.random.alphaNumeric(30)}.pdf`,
+        link,
+    };
+}
+
+async function createExam(): Promise<SendExam> {
+    const info = await getInfo();
+    const { name, link } = info;
+    const { category, semester, subject, teacher } = await createInfo();
+
+    await getRepository(ExamEntity).insert({
+        name,
+        category,
+        semester,
+        subject,
+        teacher,
+        link,
+    });
+
+    return {
+        name,
+        category: category.name,
+        semester: semester.name,
+        subject: subject.name,
+        teacher: teacher.name,
+        link,
     };
 }
 
@@ -81,6 +132,7 @@ function stringFactory() {
 
 export {
     createIncorrectExam,
+    getInfo,
     createExam,
     createTeacherAndSubject,
     stringFactory,

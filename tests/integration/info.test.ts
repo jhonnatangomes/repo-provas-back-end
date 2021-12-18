@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { getConnection, getRepository } from 'typeorm';
 
 import { deleteTables } from '../utils/deleteTables';
-import { createExam, createTeacherAndSubject } from '../factories/examFactory';
+import { getInfo, createTeacherAndSubject } from '../factories/examFactory';
 import { SendExam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
 
@@ -22,7 +22,7 @@ describe('get /info', () => {
     let exam: SendExam;
     beforeAll(async () => {
         await deleteTables();
-        exam = await createExam();
+        exam = await getInfo();
     });
 
     it('returns 200 and an object with database info', async () => {

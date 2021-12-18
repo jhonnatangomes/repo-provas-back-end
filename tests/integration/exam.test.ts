@@ -5,6 +5,7 @@ import { getConnection, getRepository } from 'typeorm';
 import {
     createExam,
     createIncorrectExam,
+    getInfo,
     stringFactory,
 } from '../factories/examFactory';
 import { ExamEntity } from '../../src/entities/ExamEntity';
@@ -32,7 +33,7 @@ describe('post /provas', () => {
     });
 
     it("returns 404 when category doesn't exist", async () => {
-        const exam = await createExam();
+        const exam = await getInfo();
         const result = await agent.post('/provas').send({
             ...exam,
             category: stringFactory(),
@@ -41,7 +42,7 @@ describe('post /provas', () => {
     });
 
     it("returns 404 when semester doesn't exist", async () => {
-        const exam = await createExam();
+        const exam = await getInfo();
         const result = await agent.post('/provas').send({
             ...exam,
             semester: stringFactory(),
@@ -50,7 +51,7 @@ describe('post /provas', () => {
     });
 
     it("returns 404 when subject doesn't exist", async () => {
-        const exam = await createExam();
+        const exam = await getInfo();
         const result = await agent.post('/provas').send({
             ...exam,
             subject: stringFactory(),
@@ -59,7 +60,7 @@ describe('post /provas', () => {
     });
 
     it("returns 404 when teacher doesn't exist", async () => {
-        const exam = await createExam();
+        const exam = await getInfo();
         const result = await agent.post('/provas').send({
             ...exam,
             teacher: stringFactory(),
@@ -68,7 +69,7 @@ describe('post /provas', () => {
     });
 
     it('returns 200 and inserts an exam in database', async () => {
-        const exam = await createExam();
+        const exam = await getInfo();
         const result = await agent.post('/provas').send(exam);
         const examInDb = await getRepository(ExamEntity).find({
             where: { name: exam.name },
@@ -77,5 +78,23 @@ describe('post /provas', () => {
 
         expect(result.status).toEqual(200);
         expect(result.body).toEqual(examInDb[0].getExam());
+    });
+});
+
+describe('get /provas/professores', () => {
+    afterEach(async () => {
+        await deleteTables();
+    });
+
+    it('returns 200 and a list of teachers with their amount of exams', async () => {
+        const exam = await createExam();
+        const exam2 = await createExam();
+
+        const result = await agent.get('/provas/professores');
+        expect(result.status).toEqual(200);
+        expect(result.body[0].name).toEqual(exam.teacher);
+        expect(result.body[0].amount).toEqual(1);
+        expect(result.body[1].name).toEqual(exam2.teacher);
+        expect(result.body[1].amount).toEqual(1);
     });
 });
