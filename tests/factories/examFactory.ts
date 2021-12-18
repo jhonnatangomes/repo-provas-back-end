@@ -70,12 +70,8 @@ async function createTeacherAndSubject(): Promise<TeacherInfo> {
     });
 
     return {
-        teacher: {
-            name: teacher.name,
-        },
-        subject: {
-            name: subject.name,
-        },
+        subject: subject.name,
+        teachers: [teacher.name],
     };
 }
 

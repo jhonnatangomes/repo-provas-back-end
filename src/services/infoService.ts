@@ -1,13 +1,8 @@
-import { getRepository } from 'typeorm';
+import { getRepository, ILike } from 'typeorm';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
-import { TeacherEntity } from '../entities/TeacherEntity';
-import {
-    InfoSent,
-    TeacherInfo,
-    TeacherInfoQuery,
-} from '../protocols/infoInterface';
+import { InfoSent } from '../protocols/infoInterface';
 
 async function getInfo(): Promise<InfoSent> {
     const categories = await getRepository(CategoryEntity).find();
@@ -21,21 +16,15 @@ async function getInfo(): Promise<InfoSent> {
     };
 }
 
-async function getTeachers(subject: string): Promise<TeacherInfo[]> {
-    const result: TeacherInfoQuery[] = await getRepository(TeacherEntity)
-        .createQueryBuilder('teachers')
-        .innerJoinAndSelect('teachers.subjects', 'subjects')
-        .where('subjects.name ILIKE :subject', { subject: `%${subject}%` })
-        .execute();
+async function getTeachers(subject: string) {
+    const result = await getRepository(SubjectEntity).find({
+        relations: ['teachers'],
+        where: {
+            name: ILike(`%${subject}%`),
+        },
+    });
 
-    return result.map((el) => ({
-        teacher: {
-            name: el.teachers_name,
-        },
-        subject: {
-            name: el.subjects_name,
-        },
-    }));
+    return result.map((subject) => subject.getTeachers());
 }
 
 export { getInfo, getTeachers };
