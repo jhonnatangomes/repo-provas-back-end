@@ -1,11 +1,7 @@
 interface Info {
-    name: string;
-}
-
-interface InfoSent {
-    categories: Info[];
-    semesters: Info[];
-    subjects: Info[];
+    categories: string[];
+    semesters: string[];
+    subjects: string[];
 }
 
 interface TeacherInfo {
@@ -13,4 +9,4 @@ interface TeacherInfo {
     teachers: string[];
 }
 
-export { Info, InfoSent, TeacherInfo };
+export { Info, TeacherInfo };

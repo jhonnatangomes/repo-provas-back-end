@@ -31,9 +31,9 @@ describe('get /info', () => {
         expect(result.body).toHaveProperty('categories');
         expect(result.body).toHaveProperty('semesters');
         expect(result.body).toHaveProperty('subjects');
-        expect(result.body.categories[0].name).toEqual(exam.category);
-        expect(result.body.semesters[0].name).toEqual(exam.semester);
-        expect(result.body.subjects[0].name).toEqual(exam.subject);
+        expect(result.body.categories[0]).toEqual(exam.category);
+        expect(result.body.semesters[0]).toEqual(exam.semester);
+        expect(result.body.subjects[0]).toEqual(exam.subject);
     });
 });
 
