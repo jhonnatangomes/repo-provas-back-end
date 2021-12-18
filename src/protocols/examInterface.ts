@@ -7,4 +7,9 @@ interface SendExam {
     link: string;
 }
 
-export { SendExam };
+interface ExamFiltered {
+    name: string;
+    amount: number;
+}
+
+export { SendExam, ExamFiltered };

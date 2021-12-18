@@ -1,4 +1,4 @@
-import { SendExam } from '../protocols/examInterface';
+import { ExamFiltered, SendExam } from '../protocols/examInterface';
 import { getRepository } from 'typeorm';
 import { ExamEntity } from '../entities/ExamEntity';
 import { CategoryEntity } from '../entities/CategoryEntity';
@@ -55,4 +55,15 @@ async function sendExam(exam: SendExam): Promise<SendExam> {
     return result.getExam();
 }
 
-export { sendExam };
+async function getExams(filter: string): Promise<ExamFiltered[]> {
+    let result;
+    if (filter === 'professores') {
+        result = await getRepository(TeacherEntity).find({});
+    }
+
+    result.sort((a, b) => b.getExams().amount - a.getExams().amount);
+
+    return result.map((el) => el.getExams()).filter((el) => el.amount !== 0);
+}
+
+export { sendExam, getExams };

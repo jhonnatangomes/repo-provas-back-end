@@ -20,4 +20,14 @@ async function sendExam(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { sendExam };
+async function getExams(req: Request, res: Response, next: NextFunction) {
+    try {
+        const filter = req.url.split('/')[1];
+        const result = await examService.getExams(filter);
+        return res.send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export { sendExam, getExams };
