@@ -39,6 +39,10 @@ async function getExamsByTeacherId(
         const { id } = req.params;
         const teacherId = Number(id);
 
+        if (Number.isNaN(teacherId)) {
+            return res.status(400).send('id must be a number');
+        }
+
         const result = await examService.getExamsByTeacherId(teacherId);
         return res.send(result);
     } catch (error) {

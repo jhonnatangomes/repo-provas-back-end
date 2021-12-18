@@ -130,10 +130,15 @@ function stringFactory() {
     return faker.datatype.string();
 }
 
+function alphaNumericFactory() {
+    return faker.random.alphaNumeric(10);
+}
+
 export {
     createIncorrectExam,
     getInfo,
     createExam,
     createTeacherAndSubject,
     stringFactory,
+    alphaNumericFactory,
 };

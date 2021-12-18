@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { getConnection, getRepository } from 'typeorm';
 
 import {
+    alphaNumericFactory,
     createExam,
     createIncorrectExam,
     getInfo,
@@ -10,6 +11,7 @@ import {
 } from '../factories/examFactory';
 import { ExamEntity } from '../../src/entities/ExamEntity';
 import { deleteTables } from '../utils/deleteTables';
+import { TeacherEntity } from '../../src/entities/TeacherEntity';
 
 const agent = supertest(app);
 
@@ -82,7 +84,7 @@ describe('post /provas', () => {
 });
 
 describe('get /provas/professores', () => {
-    afterEach(async () => {
+    beforeAll(async () => {
         await deleteTables();
     });
 
@@ -96,5 +98,32 @@ describe('get /provas/professores', () => {
         expect(result.body[0].amount).toEqual(1);
         expect(result.body[1].name).toEqual(exam2.teacher);
         expect(result.body[1].amount).toEqual(1);
+    });
+});
+
+describe('get /provas/professores/:id', () => {
+    beforeAll(async () => {
+        await deleteTables();
+    });
+
+    it('returns 400 if id given is not a number', async () => {
+        const result = await agent.get(
+            `/provas/professores/${alphaNumericFactory()}`
+        );
+        expect(result.status).toEqual(400);
+    });
+
+    it('returns 200 and a list of exams grouped by categories', async () => {
+        const exam = await createExam();
+
+        const teacher = await getRepository(TeacherEntity).findOne({
+            name: exam.teacher,
+        });
+
+        const result = await agent.get(`/provas/professores/${teacher.id}`);
+        expect(result.status).toEqual(200);
+        expect(result.body[0].category).toEqual(exam.category);
+        expect(result.body[0].exams[0].teacher.id).toEqual(teacher.id);
+        expect(result.body[0].exams[0].teacher.name).toEqual(exam.teacher);
     });
 });
