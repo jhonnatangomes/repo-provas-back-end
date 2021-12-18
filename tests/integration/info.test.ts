@@ -51,7 +51,7 @@ describe('get /info/professores', () => {
 
     it('returns 200 and the list of teachers for given subject', async () => {
         const result = await agent.get(
-            `/info/professores?disciplina=${teacherAndSubject.subject.name}`
+            `/info/professores?disciplina=${teacherAndSubject.subject}`
         );
         expect(result.status).toEqual(200);
         expect(result.body[0]).toEqual(teacherAndSubject);
