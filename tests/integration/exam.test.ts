@@ -122,8 +122,10 @@ describe('get /provas/professores/:id', () => {
 
         const result = await agent.get(`/provas/professores/${teacher.id}`);
         expect(result.status).toEqual(200);
-        expect(result.body[0].category).toEqual(exam.category);
-        expect(result.body[0].exams[0].teacher.id).toEqual(teacher.id);
-        expect(result.body[0].exams[0].teacher.name).toEqual(exam.teacher);
+        expect(result.body.teacher).toEqual(exam.teacher);
+        expect(result.body.info[0].category).toEqual(exam.category);
+        expect(result.body.info[0].exams[0].name).toEqual(exam.name);
+        expect(result.body.info[0].exams[0].subject).toEqual(exam.subject);
+        expect(result.body.info[0].exams[0].link).toEqual(exam.link);
     });
 });
