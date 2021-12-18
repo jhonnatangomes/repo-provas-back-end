@@ -1,10 +1,4 @@
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    ManyToMany,
-    JoinColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { TeacherEntity } from './TeacherEntity';
 
 @Entity('subjects')
@@ -17,4 +11,11 @@ export class SubjectEntity {
 
     @ManyToMany(() => TeacherEntity, (teacher) => teacher.subjects)
     teachers: TeacherEntity[];
+
+    getTeachers() {
+        return {
+            subject: this.name,
+            teachers: this.teachers.map((el) => el.name),
+        };
+    }
 }
