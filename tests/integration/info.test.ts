@@ -54,6 +54,6 @@ describe('get /info/professores', () => {
             `/info/professores?disciplina=${teacherAndSubject.subject}`
         );
         expect(result.status).toEqual(200);
-        expect(result.body[0]).toEqual(teacherAndSubject);
+        expect(result.body).toEqual(teacherAndSubject);
     });
 });
