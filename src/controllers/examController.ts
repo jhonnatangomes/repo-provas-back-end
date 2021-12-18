@@ -46,6 +46,9 @@ async function getExamsByTeacherId(
         const result = await examService.getExamsByTeacherId(teacherId);
         return res.send(result);
     } catch (error) {
+        if (error.type === 'NotFound') {
+            return res.status(404).send(error.message);
+        }
         return next(error);
     }
 }

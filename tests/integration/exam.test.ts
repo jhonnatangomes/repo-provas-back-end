@@ -113,6 +113,11 @@ describe('get /provas/professores/:id', () => {
         expect(result.status).toEqual(400);
     });
 
+    it('returns 404 for when no exams are found', async () => {
+        const result = await agent.get('/provas/professores/1');
+        expect(result.status).toEqual(404);
+    });
+
     it('returns 200 and a list of exams grouped by categories', async () => {
         const exam = await createExam();
 

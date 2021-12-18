@@ -82,6 +82,10 @@ async function getExamsByTeacherId(
         order: { category: 'ASC' },
     });
 
+    if (result.length === 0) {
+        throw new APIError('No exams found', 'NotFound');
+    }
+
     const formattedResult = result.map((el) => el.getExam());
 
     return groupByCategory(formattedResult);
