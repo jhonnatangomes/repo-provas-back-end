@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { getConnection, getRepository } from 'typeorm';
 
 import { deleteTables } from '../utils/deleteTables';
-import { createExam, createTeacherAndSubject } from '../factories/examFactory';
+import { getInfo, createTeacherAndSubject } from '../factories/examFactory';
 import { SendExam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
 
@@ -22,7 +22,7 @@ describe('get /info', () => {
     let exam: SendExam;
     beforeAll(async () => {
         await deleteTables();
-        exam = await createExam();
+        exam = await getInfo();
     });
 
     it('returns 200 and an object with database info', async () => {
@@ -31,9 +31,9 @@ describe('get /info', () => {
         expect(result.body).toHaveProperty('categories');
         expect(result.body).toHaveProperty('semesters');
         expect(result.body).toHaveProperty('subjects');
-        expect(result.body.categories[0].name).toEqual(exam.category);
-        expect(result.body.semesters[0].name).toEqual(exam.semester);
-        expect(result.body.subjects[0].name).toEqual(exam.subject);
+        expect(result.body.categories[0]).toEqual(exam.category);
+        expect(result.body.semesters[0]).toEqual(exam.semester);
+        expect(result.body.subjects[0]).toEqual(exam.subject);
     });
 });
 
@@ -54,6 +54,6 @@ describe('get /info/professores', () => {
             `/info/professores?disciplina=${teacherAndSubject.subject}`
         );
         expect(result.status).toEqual(200);
-        expect(result.body[0]).toEqual(teacherAndSubject);
+        expect(result.body).toEqual(teacherAndSubject);
     });
 });

@@ -2,21 +2,21 @@ import { getRepository, ILike } from 'typeorm';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
-import { InfoSent } from '../protocols/infoInterface';
+import { Info, TeacherInfo } from '../protocols/infoInterface';
 
-async function getInfo(): Promise<InfoSent> {
+async function getInfo(): Promise<Info> {
     const categories = await getRepository(CategoryEntity).find();
     const semesters = await getRepository(SemesterEntity).find();
     const subjects = await getRepository(SubjectEntity).find();
 
     return {
-        categories: categories.map((el) => ({ name: el.name })),
-        semesters: semesters.map((el) => ({ name: el.name })),
-        subjects: subjects.map((el) => ({ name: el.name })),
+        categories: categories.map((el) => el.name),
+        semesters: semesters.map((el) => el.name),
+        subjects: subjects.map((el) => el.name),
     };
 }
 
-async function getTeachers(subject: string) {
+async function getTeachers(subject: string): Promise<TeacherInfo> {
     const result = await getRepository(SubjectEntity).find({
         relations: ['teachers'],
         where: {
@@ -24,7 +24,7 @@ async function getTeachers(subject: string) {
         },
     });
 
-    return result.map((subject) => subject.getTeachers());
+    return result[0].getTeachers();
 }
 
 export { getInfo, getTeachers };

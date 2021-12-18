@@ -3,8 +3,10 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ExamEntity } from './ExamEntity';
 import { SubjectEntity } from './SubjectEntity';
 
 @Entity('teachers')
@@ -14,6 +16,9 @@ export class TeacherEntity {
 
     @Column()
     name: string;
+
+    @OneToMany(() => ExamEntity, (exam) => exam.teacher)
+    exams: ExamEntity[];
 
     @ManyToMany(() => SubjectEntity, (subject) => subject.teachers)
     @JoinTable({
@@ -26,4 +31,8 @@ export class TeacherEntity {
         },
     })
     subjects: SubjectEntity[];
+
+    getExamAmounts() {
+        return { id: this.id, name: this.name, amount: this.exams.length };
+    }
 }

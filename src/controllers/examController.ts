@@ -20,4 +20,34 @@ async function sendExam(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export { sendExam };
+async function getExams(req: Request, res: Response, next: NextFunction) {
+    try {
+        const filter = req.url.split('/')[1];
+        const result = await examService.getExams(filter);
+        return res.send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+async function getExamsByTeacherId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const { id } = req.params;
+        const teacherId = Number(id);
+
+        if (Number.isNaN(teacherId)) {
+            return res.status(400).send('id must be a number');
+        }
+
+        const result = await examService.getExamsByTeacherId(teacherId);
+        return res.send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export { sendExam, getExams, getExamsByTeacherId };
