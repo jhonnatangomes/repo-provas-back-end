@@ -1,9 +1,9 @@
+import { getRepository } from 'typeorm';
 import {
     ExamByTeacher,
     ExamsBySemesters,
     SendExam,
 } from '../protocols/examInterface';
-import { getRepository, In } from 'typeorm';
 import { ExamEntity } from '../entities/ExamEntity';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
@@ -11,7 +11,6 @@ import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
 import { groupBySubject, groupByTeacher } from '../helpers/groupByCategory';
-import { CategoryGroupWithTeacher } from '../protocols/groupByCategoryInterface';
 
 async function sendExam(exam: SendExam): Promise<SendExam> {
     const { name, category, semester, subject, teacher, link } = exam;

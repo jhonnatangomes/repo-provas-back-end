@@ -73,11 +73,11 @@ function groupByExam(exams: ExamEntity[]) {
     exams.sort((a, b) => {
         if (a.subject.name > b.subject.name) {
             return 1;
-        } else if (a.subject.name < b.subject.name) {
-            return -1;
-        } else {
-            return 0;
         }
+        if (a.subject.name < b.subject.name) {
+            return -1;
+        }
+        return 0;
     });
 
     exams.forEach((exam) => {
