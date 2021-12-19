@@ -62,6 +62,11 @@ async function getExamsBySubjectId(
         const { semId, subId } = req.params;
         const semesterId = Number(semId);
         const subjectId = Number(subId);
+
+        if (Number.isNaN(semesterId) || Number.isNaN(subjectId)) {
+            return res.status(400).send('ids must be numbers');
+        }
+
         const result = await examService.getExamsBySubjectId(
             semesterId,
             subjectId
