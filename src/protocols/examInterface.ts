@@ -13,6 +13,7 @@ interface ExamByTeacher {
 }
 
 interface ExamBySubject {
+    id: number;
     subject: string;
     amount: number;
 }

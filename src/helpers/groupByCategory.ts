@@ -86,6 +86,7 @@ function groupByExam(exams: ExamEntity[]) {
             lastElement.amount += 1;
         } else {
             result.push({
+                id: exam.subject.id,
                 subject: exam.subject.name,
                 amount: 1,
             });
