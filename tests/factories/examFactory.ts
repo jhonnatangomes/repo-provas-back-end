@@ -11,6 +11,15 @@ import { ExamEntity } from '../../src/entities/ExamEntity';
 
 faker.locale = 'pt_BR';
 
+interface IncorrectExam {
+    name: number;
+    category: string;
+    semester: number;
+    subject: (string | number)[];
+    teacher: string;
+    link: string;
+}
+
 interface Info {
     id: number;
     name: string;
@@ -23,7 +32,7 @@ interface AllInfo {
     teacher: Info;
 }
 
-function createIncorrectExam() {
+function createIncorrectExam(): IncorrectExam {
     return {
         name: faker.datatype.number(),
         category: faker.datatype.string(),
@@ -127,11 +136,11 @@ async function createTeacherAndSubject(): Promise<TeacherInfo> {
     };
 }
 
-function stringFactory() {
+function stringFactory(): string {
     return faker.datatype.string();
 }
 
-function alphaNumericFactory() {
+function alphaNumericFactory(): string {
     return faker.random.alphaNumeric(10);
 }
 
