@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    OneToMany,
+} from 'typeorm';
+import { ExamEntity } from './ExamEntity';
 import { TeacherEntity } from './TeacherEntity';
 
 @Entity('subjects')
@@ -8,6 +15,9 @@ export class SubjectEntity {
 
     @Column()
     name: string;
+
+    @OneToMany(() => ExamEntity, (exam) => exam.subject)
+    exams: ExamEntity[];
 
     @ManyToMany(() => TeacherEntity, (teacher) => teacher.subjects)
     teachers: TeacherEntity[];

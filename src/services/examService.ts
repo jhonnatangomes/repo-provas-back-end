@@ -1,4 +1,8 @@
-import { ExamFiltered, SendExam } from '../protocols/examInterface';
+import {
+    ExamByTeacher,
+    ExamsBySemesters,
+    SendExam,
+} from '../protocols/examInterface';
 import { getRepository, In } from 'typeorm';
 import { ExamEntity } from '../entities/ExamEntity';
 import { CategoryEntity } from '../entities/CategoryEntity';
@@ -6,7 +10,7 @@ import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
-import { groupByCategory } from '../helpers/groupByCategory';
+import { groupByTeacher } from '../helpers/groupByCategory';
 import { CategoryGroupWithTeacher } from '../protocols/groupByCategoryInterface';
 
 async function sendExam(exam: SendExam): Promise<SendExam> {
@@ -57,21 +61,31 @@ async function sendExam(exam: SendExam): Promise<SendExam> {
     return result.getExam();
 }
 
-async function getExams(filter: string): Promise<ExamFiltered[]> {
+async function getExams(
+    filter: string
+): Promise<ExamByTeacher[] | ExamsBySemesters[]> {
     let result;
+
     if (filter === 'professores') {
         result = await getRepository(TeacherEntity).find({
             relations: ['exams'],
         });
+
+        result.sort(
+            (a, b) => b.getExamAmounts().amount - a.getExamAmounts().amount
+        );
+
+        return result
+            .map((el) => el.getExamAmounts())
+            .filter((el) => el.amount !== 0);
+    }
+    if (filter === 'disciplinas') {
+        result = await getRepository(SemesterEntity).find({
+            relations: ['exams'],
+        });
     }
 
-    result.sort(
-        (a, b) => b.getExamAmounts().amount - a.getExamAmounts().amount
-    );
-
-    return result
-        .map((el) => el.getExamAmounts())
-        .filter((el) => el.amount !== 0);
+    return result.map((el) => el.getExams()).filter((el) => el.exams.length);
 }
 
 async function getExamsByTeacherId(
@@ -88,7 +102,7 @@ async function getExamsByTeacherId(
 
     const formattedResult = result.map((el) => el.getExam());
 
-    return groupByCategory(formattedResult);
+    return groupByTeacher(formattedResult);
 }
 
 export { sendExam, getExams, getExamsByTeacherId };

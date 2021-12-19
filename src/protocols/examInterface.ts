@@ -7,9 +7,19 @@ interface SendExam {
     link: string;
 }
 
-interface ExamFiltered {
+interface ExamByTeacher {
     name: string;
     amount: number;
 }
 
-export { SendExam, ExamFiltered };
+interface ExamBySubject {
+    subject: string;
+    amount: number;
+}
+
+interface ExamsBySemesters {
+    semester: string;
+    exams: ExamBySubject[];
+}
+
+export { SendExam, ExamByTeacher, ExamBySubject, ExamsBySemesters };

@@ -7,5 +7,6 @@ const router = Router();
 router.post('', examController.sendExam);
 router.get('/professores', examController.getExams);
 router.get('/professores/:id', examController.getExamsByTeacherId);
+router.get('/disciplinas', examController.getExams);
 
 export default router;
