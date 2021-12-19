@@ -1,6 +1,9 @@
 import { ExamEntity } from '../entities/ExamEntity';
 import { ExamBySubject, SendExam } from '../protocols/examInterface';
-import { CategoryGroupWithTeacher } from '../protocols/groupByCategoryInterface';
+import {
+    CategoryGroupWithSubject,
+    CategoryGroupWithTeacher,
+} from '../protocols/groupByCategoryInterface';
 
 function groupByTeacher(exams: SendExam[]) {
     const result: CategoryGroupWithTeacher = {
@@ -23,6 +26,37 @@ function groupByTeacher(exams: SendExam[]) {
                     {
                         name: exam.name,
                         subject: exam.subject,
+                        link: exam.link,
+                    },
+                ],
+            });
+        }
+    });
+
+    return result;
+}
+
+function groupBySubject(exams: SendExam[]) {
+    const result: CategoryGroupWithSubject = {
+        subject: exams[0].subject,
+        info: [],
+    };
+
+    exams.forEach((exam) => {
+        const lastElement = result.info[result.info.length - 1];
+        if (lastElement?.category === exam.category) {
+            lastElement.exams.push({
+                name: exam.name,
+                teacher: exam.teacher,
+                link: exam.link,
+            });
+        } else {
+            result.info.push({
+                category: exam.category,
+                exams: [
+                    {
+                        name: exam.name,
+                        teacher: exam.teacher,
                         link: exam.link,
                     },
                 ],
@@ -58,7 +92,9 @@ function groupByExam(exams: ExamEntity[]) {
         }
     });
 
+    result.sort((a, b) => b.amount - a.amount);
+
     return result;
 }
 
-export { groupByTeacher, groupByExam };
+export { groupByTeacher, groupBySubject, groupByExam };

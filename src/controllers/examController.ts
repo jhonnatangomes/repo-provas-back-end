@@ -53,4 +53,26 @@ async function getExamsByTeacherId(
     }
 }
 
-export { sendExam, getExams, getExamsByTeacherId };
+async function getExamsBySubjectId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const { semId, subId } = req.params;
+        const semesterId = Number(semId);
+        const subjectId = Number(subId);
+        const result = await examService.getExamsBySubjectId(
+            semesterId,
+            subjectId
+        );
+        return res.send(result);
+    } catch (error) {
+        if (error.type === 'NotFound') {
+            return res.status(404).send(error.message);
+        }
+        return next(error);
+    }
+}
+
+export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };

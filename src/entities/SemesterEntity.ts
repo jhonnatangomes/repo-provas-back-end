@@ -15,6 +15,7 @@ export class SemesterEntity {
 
     getExams() {
         return {
+            id: this.id,
             semester: this.name,
             exams: groupByExam(this.exams),
         };

@@ -1,7 +1,8 @@
 interface GroupedExam {
     name: string;
-    subject: string;
+    subject?: string;
     link: string;
+    teacher?: string;
 }
 
 interface CategoryGroup {
@@ -14,4 +15,9 @@ interface CategoryGroupWithTeacher {
     info: CategoryGroup[];
 }
 
-export { CategoryGroupWithTeacher };
+interface CategoryGroupWithSubject {
+    subject: string;
+    info: CategoryGroup[];
+}
+
+export { CategoryGroupWithTeacher, CategoryGroupWithSubject };
