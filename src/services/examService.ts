@@ -1,19 +1,22 @@
+import { getRepository } from 'typeorm';
 import {
-    ExamByTeacher,
-    ExamsBySemesters,
-    SendExam,
+    AmountOfExamsByTeacher,
+    AmountOfExamsBySemester,
+    Exam,
 } from '../protocols/examInterface';
-import { getRepository, In } from 'typeorm';
 import { ExamEntity } from '../entities/ExamEntity';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
-import { groupBySubject, groupByTeacher } from '../helpers/groupByCategory';
-import { CategoryGroupWithTeacher } from '../protocols/groupByCategoryInterface';
+import { groupByCategory } from '../helpers/groupByCategory';
+import {
+    ExamsBySubject,
+    ExamsByTeacher,
+} from '../protocols/groupByCategoryInterface';
 
-async function sendExam(exam: SendExam): Promise<SendExam> {
+async function sendExam(exam: Exam): Promise<Exam> {
     const { name, category, semester, subject, teacher, link } = exam;
     const categoryResult = await getRepository(CategoryEntity).find({
         name: category,
@@ -63,7 +66,7 @@ async function sendExam(exam: SendExam): Promise<SendExam> {
 
 async function getExams(
     filter: string
-): Promise<ExamByTeacher[] | ExamsBySemesters[]> {
+): Promise<AmountOfExamsByTeacher[] | AmountOfExamsBySemester[]> {
     let result;
 
     if (filter === 'professores') {
@@ -71,12 +74,10 @@ async function getExams(
             relations: ['exams'],
         });
 
-        result.sort(
-            (a, b) => b.getExamAmounts().amount - a.getExamAmounts().amount
-        );
+        result.sort((a, b) => b.getExams().amount - a.getExams().amount);
 
         return result
-            .map((el) => el.getExamAmounts())
+            .map((el) => el.getExams())
             .filter((el) => el.amount !== 0);
     }
     if (filter === 'disciplinas') {
@@ -90,9 +91,23 @@ async function getExams(
         .filter((el) => el.exams.length !== 0);
 }
 
-async function getExamsByTeacherId(teacherId: number) {
+interface idParams {
+    teacherId?: number;
+    semesterId?: number;
+    subjectId?: number;
+}
+
+async function getExamsByColumnId(
+    params: idParams
+): Promise<ExamsByTeacher | ExamsBySubject> {
+    const { teacherId, semesterId, subjectId } = params;
+
+    const whereClause = teacherId
+        ? { teacher: { id: teacherId } }
+        : { semester: { id: semesterId }, subject: { id: subjectId } };
+
     const result = await getRepository(ExamEntity).find({
-        where: { teacher: { id: teacherId } },
+        where: whereClause,
         order: { category: 'ASC' },
     });
 
@@ -101,24 +116,10 @@ async function getExamsByTeacherId(teacherId: number) {
     }
 
     const formattedResult = result.map((el) => el.getExam());
-
-    return groupByTeacher(formattedResult);
-}
-
-async function getExamsBySubjectId(semesterId: number, subjectId: number) {
-    const result = await getRepository(ExamEntity).find({
-        where: {
-            semester: { id: semesterId },
-            subject: { id: subjectId },
-        },
-        order: { category: 'ASC' },
-    });
-    if (result.length === 0) {
-        throw new APIError('No exams found', 'NotFound');
+    if (teacherId) {
+        return groupByCategory(formattedResult, 'teacher');
     }
-
-    const formattedResult = result.map((el) => el.getExam());
-    return groupBySubject(formattedResult);
+    return groupByCategory(formattedResult, 'subject');
 }
 
-export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };
+export { sendExam, getExams, getExamsByColumnId };

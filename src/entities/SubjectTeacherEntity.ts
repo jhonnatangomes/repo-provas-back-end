@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('teachers_subjects')

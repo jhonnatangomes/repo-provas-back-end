@@ -5,10 +5,20 @@ import { SemesterEntity } from '../../src/entities/SemesterEntity';
 import { SubjectEntity } from '../../src/entities/SubjectEntity';
 import { TeacherEntity } from '../../src/entities/TeacherEntity';
 import { SubjectTeacherEntity } from '../../src/entities/SubjectTeacherEntity';
-import { SendExam } from '../../src/protocols/examInterface';
+import { Exam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
 import { ExamEntity } from '../../src/entities/ExamEntity';
+
 faker.locale = 'pt_BR';
+
+interface IncorrectExam {
+    name: number;
+    category: string;
+    semester: number;
+    subject: (string | number)[];
+    teacher: string;
+    link: string;
+}
 
 interface Info {
     id: number;
@@ -22,7 +32,7 @@ interface AllInfo {
     teacher: Info;
 }
 
-function createIncorrectExam() {
+function createIncorrectExam(): IncorrectExam {
     return {
         name: faker.datatype.number(),
         category: faker.datatype.string(),
@@ -63,7 +73,7 @@ async function createInfo(): Promise<AllInfo> {
     };
 }
 
-async function getInfo(): Promise<SendExam> {
+async function getInfo(): Promise<Exam> {
     const { category, semester, subject, teacher } = await createInfo();
 
     const name = faker.datatype.string();
@@ -79,7 +89,7 @@ async function getInfo(): Promise<SendExam> {
     };
 }
 
-async function createExam(): Promise<SendExam> {
+async function createExam(): Promise<Exam> {
     const info = await getInfo();
     const { name, link } = info;
     const { category, semester, subject, teacher } = await createInfo();
@@ -126,11 +136,11 @@ async function createTeacherAndSubject(): Promise<TeacherInfo> {
     };
 }
 
-function stringFactory() {
+function stringFactory(): string {
     return faker.datatype.string();
 }
 
-function alphaNumericFactory() {
+function alphaNumericFactory(): string {
     return faker.random.alphaNumeric(10);
 }
 

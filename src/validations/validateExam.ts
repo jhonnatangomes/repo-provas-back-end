@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { SendExam } from '../protocols/examInterface';
+import { Exam } from '../protocols/examInterface';
 import { Validation } from '../protocols/validationInterface';
 
 const schema = Joi.object({
@@ -13,7 +13,7 @@ const schema = Joi.object({
         .required(),
 });
 
-export default function validateExam(body: SendExam): Validation {
+export default function validateExam(body: Exam): Validation {
     const validate = schema.validate(body);
     if (validate.error) {
         return {

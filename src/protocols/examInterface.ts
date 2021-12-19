@@ -1,4 +1,4 @@
-interface SendExam {
+interface Exam {
     name: string;
     category: string;
     semester: string;
@@ -7,20 +7,26 @@ interface SendExam {
     link: string;
 }
 
-interface ExamByTeacher {
+interface AmountOfExamsByTeacher {
+    id: number;
     name: string;
     amount: number;
 }
 
-interface ExamBySubject {
+interface AmountOfExamsBySubject {
     id: number;
     subject: string;
     amount: number;
 }
 
-interface ExamsBySemesters {
+interface AmountOfExamsBySemester {
     semester: string;
-    exams: ExamBySubject[];
+    exams: AmountOfExamsBySubject[];
 }
 
-export { SendExam, ExamByTeacher, ExamBySubject, ExamsBySemesters };
+export {
+    Exam,
+    AmountOfExamsByTeacher,
+    AmountOfExamsBySubject,
+    AmountOfExamsBySemester,
+};

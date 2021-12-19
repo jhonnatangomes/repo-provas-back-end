@@ -1,23 +1,23 @@
-interface GroupedExam {
+interface Exam {
     name: string;
     subject?: string;
     link: string;
     teacher?: string;
 }
 
-interface CategoryGroup {
+interface ExamsByCategory {
     category: string;
-    exams: GroupedExam[];
+    exams: Exam[];
 }
 
-interface CategoryGroupWithTeacher {
+interface ExamsByTeacher {
     teacher: string;
-    info: CategoryGroup[];
+    info: ExamsByCategory[];
 }
 
-interface CategoryGroupWithSubject {
+interface ExamsBySubject {
     subject: string;
-    info: CategoryGroup[];
+    info: ExamsByCategory[];
 }
 
-export { CategoryGroupWithTeacher, CategoryGroupWithSubject };
+export { ExamsByTeacher, ExamsBySubject };

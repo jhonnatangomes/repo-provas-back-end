@@ -30,47 +30,30 @@ async function getExams(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-async function getExamsByTeacherId(
+async function getExamsByColumnId(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
     try {
-        const { id } = req.params;
-        const teacherId = Number(id);
-
-        if (Number.isNaN(teacherId)) {
-            return res.status(400).send('id must be a number');
-        }
-
-        const result = await examService.getExamsByTeacherId(teacherId);
-        return res.send(result);
-    } catch (error) {
-        if (error.type === 'NotFound') {
-            return res.status(404).send(error.message);
-        }
-        return next(error);
-    }
-}
-
-async function getExamsBySubjectId(
-    req: Request,
-    res: Response,
-    next: NextFunction
-) {
-    try {
-        const { semId, subId } = req.params;
+        const { teaId, semId, subId } = req.params;
+        const teacherId = Number(teaId);
         const semesterId = Number(semId);
         const subjectId = Number(subId);
 
-        if (Number.isNaN(semesterId) || Number.isNaN(subjectId)) {
+        if (teaId && Number.isNaN(teacherId)) {
+            return res.status(400).send('id must be a number');
+        }
+
+        if (!teaId && (Number.isNaN(semesterId) || Number.isNaN(subjectId))) {
             return res.status(400).send('ids must be numbers');
         }
 
-        const result = await examService.getExamsBySubjectId(
+        const result = await examService.getExamsByColumnId({
+            teacherId,
             semesterId,
-            subjectId
-        );
+            subjectId,
+        });
         return res.send(result);
     } catch (error) {
         if (error.type === 'NotFound') {
@@ -80,4 +63,4 @@ async function getExamsBySubjectId(
     }
 }
 
-export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };
+export { sendExam, getExams, getExamsByColumnId };

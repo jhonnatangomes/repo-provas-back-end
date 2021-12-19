@@ -1,5 +1,6 @@
+/* eslint-disable indent */
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { groupByExam } from '../helpers/groupByCategory';
+import { groupBySubject } from '../helpers/groupByCategory';
 import { ExamEntity } from './ExamEntity';
 
 @Entity('semesters')
@@ -17,7 +18,7 @@ export class SemesterEntity {
         return {
             id: this.id,
             semester: this.name,
-            exams: groupByExam(this.exams),
+            exams: groupBySubject(this.exams),
         };
     }
 }

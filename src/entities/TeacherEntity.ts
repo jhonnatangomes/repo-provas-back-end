@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
     Column,
     Entity,
@@ -32,7 +33,7 @@ export class TeacherEntity {
     })
     subjects: SubjectEntity[];
 
-    getExamAmounts() {
+    getExams() {
         return { id: this.id, name: this.name, amount: this.exams.length };
     }
 }

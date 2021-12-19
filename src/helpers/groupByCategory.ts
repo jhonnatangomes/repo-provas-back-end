@@ -1,22 +1,36 @@
 import { ExamEntity } from '../entities/ExamEntity';
-import { ExamBySubject, SendExam } from '../protocols/examInterface';
+import { AmountOfExamsBySubject, Exam } from '../protocols/examInterface';
 import {
-    CategoryGroupWithSubject,
-    CategoryGroupWithTeacher,
+    ExamsBySubject,
+    ExamsByTeacher,
 } from '../protocols/groupByCategoryInterface';
 
-function groupByTeacher(exams: SendExam[]) {
-    const result: CategoryGroupWithTeacher = {
-        teacher: exams[0].teacher,
-        info: [],
-    };
+function groupByCategory(
+    exams: Exam[],
+    commonColumn: string
+): ExamsByTeacher | ExamsBySubject {
+    let result: ExamsByTeacher | ExamsBySubject;
+    const examColumn = commonColumn === 'teacher' ? 'subject' : 'teacher';
+
+    if (commonColumn === 'teacher') {
+        result = {
+            teacher: exams[0].teacher,
+            info: [],
+        };
+    }
+    if (commonColumn === 'subject') {
+        result = {
+            subject: exams[0].subject,
+            info: [],
+        };
+    }
 
     exams.forEach((exam) => {
         const lastElement = result.info[result.info.length - 1];
         if (lastElement?.category === exam.category) {
             lastElement.exams.push({
                 name: exam.name,
-                subject: exam.subject,
+                [examColumn]: exam[examColumn],
                 link: exam.link,
             });
         } else {
@@ -25,7 +39,7 @@ function groupByTeacher(exams: SendExam[]) {
                 exams: [
                     {
                         name: exam.name,
-                        subject: exam.subject,
+                        [examColumn]: exam[examColumn],
                         link: exam.link,
                     },
                 ],
@@ -36,48 +50,17 @@ function groupByTeacher(exams: SendExam[]) {
     return result;
 }
 
-function groupBySubject(exams: SendExam[]) {
-    const result: CategoryGroupWithSubject = {
-        subject: exams[0].subject,
-        info: [],
-    };
-
-    exams.forEach((exam) => {
-        const lastElement = result.info[result.info.length - 1];
-        if (lastElement?.category === exam.category) {
-            lastElement.exams.push({
-                name: exam.name,
-                teacher: exam.teacher,
-                link: exam.link,
-            });
-        } else {
-            result.info.push({
-                category: exam.category,
-                exams: [
-                    {
-                        name: exam.name,
-                        teacher: exam.teacher,
-                        link: exam.link,
-                    },
-                ],
-            });
-        }
-    });
-
-    return result;
-}
-
-function groupByExam(exams: ExamEntity[]) {
-    const result: ExamBySubject[] = [];
+function groupBySubject(exams: ExamEntity[]): AmountOfExamsBySubject[] {
+    const result: AmountOfExamsBySubject[] = [];
 
     exams.sort((a, b) => {
         if (a.subject.name > b.subject.name) {
             return 1;
-        } else if (a.subject.name < b.subject.name) {
-            return -1;
-        } else {
-            return 0;
         }
+        if (a.subject.name < b.subject.name) {
+            return -1;
+        }
+        return 0;
     });
 
     exams.forEach((exam) => {
@@ -98,4 +81,4 @@ function groupByExam(exams: ExamEntity[]) {
     return result;
 }
 
-export { groupByTeacher, groupBySubject, groupByExam };
+export { groupByCategory, groupBySubject };
