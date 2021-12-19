@@ -74,12 +74,10 @@ async function getExams(
             relations: ['exams'],
         });
 
-        result.sort(
-            (a, b) => b.getExamAmounts().amount - a.getExamAmounts().amount
-        );
+        result.sort((a, b) => b.getExams().amount - a.getExams().amount);
 
         return result
-            .map((el) => el.getExamAmounts())
+            .map((el) => el.getExams())
             .filter((el) => el.amount !== 0);
     }
     if (filter === 'disciplinas') {
@@ -93,31 +91,23 @@ async function getExams(
         .filter((el) => el.exams.length !== 0);
 }
 
-async function getExamsByTeacherId(
-    teacherId: number
-): Promise<ExamsByTeacher | ExamsBySubject> {
-    const result = await getRepository(ExamEntity).find({
-        where: { teacher: { id: teacherId } },
-        order: { category: 'ASC' },
-    });
-
-    if (result.length === 0) {
-        throw new APIError('No exams found', 'NotFound');
-    }
-
-    const formattedResult = result.map((el) => el.getExam());
-    return groupByCategory(formattedResult, 'teacher');
+interface idParams {
+    teacherId?: number;
+    semesterId?: number;
+    subjectId?: number;
 }
 
-async function getExamsBySubjectId(
-    semesterId: number,
-    subjectId: number
+async function getExamsByColumnId(
+    params: idParams
 ): Promise<ExamsByTeacher | ExamsBySubject> {
+    const { teacherId, semesterId, subjectId } = params;
+
+    const whereClause = teacherId
+        ? { teacher: { id: teacherId } }
+        : { semester: { id: semesterId }, subject: { id: subjectId } };
+
     const result = await getRepository(ExamEntity).find({
-        where: {
-            semester: { id: semesterId },
-            subject: { id: subjectId },
-        },
+        where: whereClause,
         order: { category: 'ASC' },
     });
 
@@ -126,7 +116,10 @@ async function getExamsBySubjectId(
     }
 
     const formattedResult = result.map((el) => el.getExam());
+    if (teacherId) {
+        return groupByCategory(formattedResult, 'teacher');
+    }
     return groupByCategory(formattedResult, 'subject');
 }
 
-export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };
+export { sendExam, getExams, getExamsByColumnId };
