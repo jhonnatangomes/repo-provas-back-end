@@ -1,10 +1,10 @@
 import app, { init } from '../../src/app';
 import supertest from 'supertest';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection } from 'typeorm';
 
 import { deleteTables } from '../utils/deleteTables';
 import { getInfo, createTeacherAndSubject } from '../factories/examFactory';
-import { SendExam } from '../../src/protocols/examInterface';
+import { Exam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
 
 const agent = supertest(app);
@@ -19,7 +19,7 @@ afterAll(async () => {
 });
 
 describe('get /info', () => {
-    let exam: SendExam;
+    let exam: Exam;
     beforeAll(async () => {
         await deleteTables();
         exam = await getInfo();

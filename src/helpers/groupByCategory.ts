@@ -1,11 +1,11 @@
 import { ExamEntity } from '../entities/ExamEntity';
-import { ExamBySubject, SendExam } from '../protocols/examInterface';
+import { ExamBySubject, Exam } from '../protocols/examInterface';
 import {
     CategoryGroupWithSubject,
     CategoryGroupWithTeacher,
 } from '../protocols/groupByCategoryInterface';
 
-function groupByTeacher(exams: SendExam[]) {
+function groupByTeacher(exams: Exam[]) {
     const result: CategoryGroupWithTeacher = {
         teacher: exams[0].teacher,
         info: [],
@@ -36,7 +36,7 @@ function groupByTeacher(exams: SendExam[]) {
     return result;
 }
 
-function groupBySubject(exams: SendExam[]) {
+function groupBySubject(exams: Exam[]) {
     const result: CategoryGroupWithSubject = {
         subject: exams[0].subject,
         info: [],

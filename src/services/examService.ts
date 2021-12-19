@@ -2,7 +2,7 @@ import { getRepository } from 'typeorm';
 import {
     ExamByTeacher,
     ExamsBySemesters,
-    SendExam,
+    Exam,
 } from '../protocols/examInterface';
 import { ExamEntity } from '../entities/ExamEntity';
 import { CategoryEntity } from '../entities/CategoryEntity';
@@ -12,7 +12,7 @@ import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
 import { groupBySubject, groupByTeacher } from '../helpers/groupByCategory';
 
-async function sendExam(exam: SendExam): Promise<SendExam> {
+async function sendExam(exam: Exam): Promise<Exam> {
     const { name, category, semester, subject, teacher, link } = exam;
     const categoryResult = await getRepository(CategoryEntity).find({
         name: category,

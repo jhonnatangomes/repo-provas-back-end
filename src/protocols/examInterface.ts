@@ -1,4 +1,4 @@
-interface SendExam {
+interface Exam {
     name: string;
     category: string;
     semester: string;
@@ -23,4 +23,4 @@ interface ExamsBySemesters {
     exams: ExamBySubject[];
 }
 
-export { SendExam, ExamByTeacher, ExamBySubject, ExamsBySemesters };
+export { Exam, ExamByTeacher, ExamBySubject, ExamsBySemesters };
