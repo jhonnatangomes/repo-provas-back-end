@@ -7,20 +7,26 @@ interface Exam {
     link: string;
 }
 
-interface ExamByTeacher {
+interface AmountOfExamsByTeacher {
+    id: number;
     name: string;
     amount: number;
 }
 
-interface ExamBySubject {
+interface AmountOfExamsBySubject {
     id: number;
     subject: string;
     amount: number;
 }
 
-interface ExamsBySemesters {
+interface AmountOfExamsBySemester {
     semester: string;
-    exams: ExamBySubject[];
+    exams: AmountOfExamsBySubject[];
 }
 
-export { Exam, ExamByTeacher, ExamBySubject, ExamsBySemesters };
+export {
+    Exam,
+    AmountOfExamsByTeacher,
+    AmountOfExamsBySubject,
+    AmountOfExamsBySemester,
+};

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ExamEntity } from './ExamEntity';
 

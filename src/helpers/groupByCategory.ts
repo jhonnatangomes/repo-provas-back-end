@@ -1,12 +1,12 @@
 import { ExamEntity } from '../entities/ExamEntity';
-import { ExamBySubject, Exam } from '../protocols/examInterface';
+import { AmountOfExamsBySubject, Exam } from '../protocols/examInterface';
 import {
-    CategoryGroupWithSubject,
-    CategoryGroupWithTeacher,
+    ExamsBySubject,
+    ExamsByTeacher,
 } from '../protocols/groupByCategoryInterface';
 
-function groupByTeacher(exams: Exam[]) {
-    const result: CategoryGroupWithTeacher = {
+function groupTeacherExamsByCategory(exams: Exam[]): ExamsByTeacher {
+    const result: ExamsByTeacher = {
         teacher: exams[0].teacher,
         info: [],
     };
@@ -36,8 +36,8 @@ function groupByTeacher(exams: Exam[]) {
     return result;
 }
 
-function groupBySubject(exams: Exam[]) {
-    const result: CategoryGroupWithSubject = {
+function groupSubjectExamsByCategory(exams: Exam[]): ExamsBySubject {
+    const result: ExamsBySubject = {
         subject: exams[0].subject,
         info: [],
     };
@@ -67,8 +67,8 @@ function groupBySubject(exams: Exam[]) {
     return result;
 }
 
-function groupByExam(exams: ExamEntity[]) {
-    const result: ExamBySubject[] = [];
+function groupBySubject(exams: ExamEntity[]): AmountOfExamsBySubject[] {
+    const result: AmountOfExamsBySubject[] = [];
 
     exams.sort((a, b) => {
         if (a.subject.name > b.subject.name) {
@@ -98,4 +98,8 @@ function groupByExam(exams: ExamEntity[]) {
     return result;
 }
 
-export { groupByTeacher, groupBySubject, groupByExam };
+export {
+    groupTeacherExamsByCategory,
+    groupSubjectExamsByCategory,
+    groupBySubject,
+};

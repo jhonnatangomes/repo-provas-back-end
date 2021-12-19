@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import {
-    ExamByTeacher,
-    ExamsBySemesters,
+    AmountOfExamsByTeacher,
+    AmountOfExamsBySemester,
     Exam,
 } from '../protocols/examInterface';
 import { ExamEntity } from '../entities/ExamEntity';
@@ -10,7 +10,14 @@ import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
-import { groupBySubject, groupByTeacher } from '../helpers/groupByCategory';
+import {
+    groupSubjectExamsByCategory,
+    groupTeacherExamsByCategory,
+} from '../helpers/groupByCategory';
+import {
+    ExamsBySubject,
+    ExamsByTeacher,
+} from '../protocols/groupByCategoryInterface';
 
 async function sendExam(exam: Exam): Promise<Exam> {
     const { name, category, semester, subject, teacher, link } = exam;
@@ -62,7 +69,7 @@ async function sendExam(exam: Exam): Promise<Exam> {
 
 async function getExams(
     filter: string
-): Promise<ExamByTeacher[] | ExamsBySemesters[]> {
+): Promise<AmountOfExamsByTeacher[] | AmountOfExamsBySemester[]> {
     let result;
 
     if (filter === 'professores') {
@@ -89,7 +96,7 @@ async function getExams(
         .filter((el) => el.exams.length !== 0);
 }
 
-async function getExamsByTeacherId(teacherId: number) {
+async function getExamsByTeacherId(teacherId: number): Promise<ExamsByTeacher> {
     const result = await getRepository(ExamEntity).find({
         where: { teacher: { id: teacherId } },
         order: { category: 'ASC' },
@@ -100,11 +107,13 @@ async function getExamsByTeacherId(teacherId: number) {
     }
 
     const formattedResult = result.map((el) => el.getExam());
-
-    return groupByTeacher(formattedResult);
+    return groupTeacherExamsByCategory(formattedResult);
 }
 
-async function getExamsBySubjectId(semesterId: number, subjectId: number) {
+async function getExamsBySubjectId(
+    semesterId: number,
+    subjectId: number
+): Promise<ExamsBySubject> {
     const result = await getRepository(ExamEntity).find({
         where: {
             semester: { id: semesterId },
@@ -117,7 +126,7 @@ async function getExamsBySubjectId(semesterId: number, subjectId: number) {
     }
 
     const formattedResult = result.map((el) => el.getExam());
-    return groupBySubject(formattedResult);
+    return groupSubjectExamsByCategory(formattedResult);
 }
 
 export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };
