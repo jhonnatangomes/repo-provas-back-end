@@ -46,8 +46,38 @@ async function getExamsByTeacherId(
         const result = await examService.getExamsByTeacherId(teacherId);
         return res.send(result);
     } catch (error) {
+        if (error.type === 'NotFound') {
+            return res.status(404).send(error.message);
+        }
         return next(error);
     }
 }
 
-export { sendExam, getExams, getExamsByTeacherId };
+async function getExamsBySubjectId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const { semId, subId } = req.params;
+        const semesterId = Number(semId);
+        const subjectId = Number(subId);
+
+        if (Number.isNaN(semesterId) || Number.isNaN(subjectId)) {
+            return res.status(400).send('ids must be numbers');
+        }
+
+        const result = await examService.getExamsBySubjectId(
+            semesterId,
+            subjectId
+        );
+        return res.send(result);
+    } catch (error) {
+        if (error.type === 'NotFound') {
+            return res.status(404).send(error.message);
+        }
+        return next(error);
+    }
+}
+
+export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };

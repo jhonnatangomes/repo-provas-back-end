@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { groupByExam } from '../helpers/groupByCategory';
+import { ExamEntity } from './ExamEntity';
 
 @Entity('semesters')
 export class SemesterEntity {
@@ -7,4 +9,15 @@ export class SemesterEntity {
 
     @Column()
     name: string;
+
+    @OneToMany(() => ExamEntity, (exam) => exam.semester)
+    exams: ExamEntity[];
+
+    getExams() {
+        return {
+            id: this.id,
+            semester: this.name,
+            exams: groupByExam(this.exams),
+        };
+    }
 }
