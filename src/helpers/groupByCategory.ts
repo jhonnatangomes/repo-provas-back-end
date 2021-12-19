@@ -5,18 +5,32 @@ import {
     ExamsByTeacher,
 } from '../protocols/groupByCategoryInterface';
 
-function groupTeacherExamsByCategory(exams: Exam[]): ExamsByTeacher {
-    const result: ExamsByTeacher = {
-        teacher: exams[0].teacher,
-        info: [],
-    };
+function groupByCategory(
+    exams: Exam[],
+    commonColumn: string
+): ExamsByTeacher | ExamsBySubject {
+    let result: ExamsByTeacher | ExamsBySubject;
+    const examColumn = commonColumn === 'teacher' ? 'subject' : 'teacher';
+
+    if (commonColumn === 'teacher') {
+        result = {
+            teacher: exams[0].teacher,
+            info: [],
+        };
+    }
+    if (commonColumn === 'subject') {
+        result = {
+            subject: exams[0].subject,
+            info: [],
+        };
+    }
 
     exams.forEach((exam) => {
         const lastElement = result.info[result.info.length - 1];
         if (lastElement?.category === exam.category) {
             lastElement.exams.push({
                 name: exam.name,
-                subject: exam.subject,
+                [examColumn]: exam[examColumn],
                 link: exam.link,
             });
         } else {
@@ -25,38 +39,7 @@ function groupTeacherExamsByCategory(exams: Exam[]): ExamsByTeacher {
                 exams: [
                     {
                         name: exam.name,
-                        subject: exam.subject,
-                        link: exam.link,
-                    },
-                ],
-            });
-        }
-    });
-
-    return result;
-}
-
-function groupSubjectExamsByCategory(exams: Exam[]): ExamsBySubject {
-    const result: ExamsBySubject = {
-        subject: exams[0].subject,
-        info: [],
-    };
-
-    exams.forEach((exam) => {
-        const lastElement = result.info[result.info.length - 1];
-        if (lastElement?.category === exam.category) {
-            lastElement.exams.push({
-                name: exam.name,
-                teacher: exam.teacher,
-                link: exam.link,
-            });
-        } else {
-            result.info.push({
-                category: exam.category,
-                exams: [
-                    {
-                        name: exam.name,
-                        teacher: exam.teacher,
+                        [examColumn]: exam[examColumn],
                         link: exam.link,
                     },
                 ],
@@ -98,8 +81,4 @@ function groupBySubject(exams: ExamEntity[]): AmountOfExamsBySubject[] {
     return result;
 }
 
-export {
-    groupTeacherExamsByCategory,
-    groupSubjectExamsByCategory,
-    groupBySubject,
-};
+export { groupByCategory, groupBySubject };

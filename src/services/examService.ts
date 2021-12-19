@@ -10,10 +10,7 @@ import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
 import { TeacherEntity } from '../entities/TeacherEntity';
 import { APIError } from '../errors/APIError';
-import {
-    groupSubjectExamsByCategory,
-    groupTeacherExamsByCategory,
-} from '../helpers/groupByCategory';
+import { groupByCategory } from '../helpers/groupByCategory';
 import {
     ExamsBySubject,
     ExamsByTeacher,
@@ -96,7 +93,9 @@ async function getExams(
         .filter((el) => el.exams.length !== 0);
 }
 
-async function getExamsByTeacherId(teacherId: number): Promise<ExamsByTeacher> {
+async function getExamsByTeacherId(
+    teacherId: number
+): Promise<ExamsByTeacher | ExamsBySubject> {
     const result = await getRepository(ExamEntity).find({
         where: { teacher: { id: teacherId } },
         order: { category: 'ASC' },
@@ -107,13 +106,13 @@ async function getExamsByTeacherId(teacherId: number): Promise<ExamsByTeacher> {
     }
 
     const formattedResult = result.map((el) => el.getExam());
-    return groupTeacherExamsByCategory(formattedResult);
+    return groupByCategory(formattedResult, 'teacher');
 }
 
 async function getExamsBySubjectId(
     semesterId: number,
     subjectId: number
-): Promise<ExamsBySubject> {
+): Promise<ExamsByTeacher | ExamsBySubject> {
     const result = await getRepository(ExamEntity).find({
         where: {
             semester: { id: semesterId },
@@ -121,12 +120,13 @@ async function getExamsBySubjectId(
         },
         order: { category: 'ASC' },
     });
+
     if (result.length === 0) {
         throw new APIError('No exams found', 'NotFound');
     }
 
     const formattedResult = result.map((el) => el.getExam());
-    return groupSubjectExamsByCategory(formattedResult);
+    return groupByCategory(formattedResult, 'subject');
 }
 
 export { sendExam, getExams, getExamsByTeacherId, getExamsBySubjectId };
