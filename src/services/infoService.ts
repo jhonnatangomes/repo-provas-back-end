@@ -2,6 +2,7 @@ import { getRepository, ILike } from 'typeorm';
 import { CategoryEntity } from '../entities/CategoryEntity';
 import { SemesterEntity } from '../entities/SemesterEntity';
 import { SubjectEntity } from '../entities/SubjectEntity';
+import { APIError } from '../errors/APIError';
 import { Info, TeacherInfo } from '../protocols/infoInterface';
 
 async function getInfo(): Promise<Info> {
@@ -23,6 +24,10 @@ async function getTeachers(subject: string): Promise<TeacherInfo> {
             name: ILike(`%${subject}%`),
         },
     });
+
+    if (result.length === 0) {
+        throw new APIError('No teachers found', 'NotFound');
+    }
 
     return result[0].getTeachers();
 }

@@ -3,7 +3,11 @@ import supertest from 'supertest';
 import { getConnection } from 'typeorm';
 
 import { deleteTables } from '../utils/deleteTables';
-import { getInfo, createTeacherAndSubject } from '../factories/examFactory';
+import {
+    getInfo,
+    createTeacherAndSubject,
+    alphaNumericFactory,
+} from '../factories/examFactory';
 import { Exam } from '../../src/protocols/examInterface';
 import { TeacherInfo } from '../../src/protocols/infoInterface';
 
@@ -47,6 +51,13 @@ describe('get /info/professores', () => {
     it('returns 400 when no subject is provided', async () => {
         const result = await agent.get('/info/professores');
         expect(result.status).toEqual(400);
+    });
+
+    it('returns 404 when a non-existent subject is sent', async () => {
+        const result = await agent.get(
+            `/info/professores?disciplina=${alphaNumericFactory()}`
+        );
+        expect(result.status).toEqual(404);
     });
 
     it('returns 200 and the list of teachers for given subject', async () => {

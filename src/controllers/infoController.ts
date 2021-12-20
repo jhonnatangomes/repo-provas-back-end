@@ -19,6 +19,9 @@ async function getTeachers(req: Request, res: Response, next: NextFunction) {
         const result = await infoService.getTeachers(disciplina.toString());
         return res.send(result);
     } catch (error) {
+        if (error.type === 'NotFound') {
+            return res.status(404).send(error.message);
+        }
         return next(error);
     }
 }
