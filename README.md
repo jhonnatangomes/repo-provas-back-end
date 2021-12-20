@@ -1,7 +1,7 @@
 # RepoProvas
 
 This is the back-end part of the RepoProvas application. You can find the front-end part [here].
-This is a RESTful API written with node.js. All routes of this application are public.
+This is a RESTful API written with node.js in TypeScript. All routes have integration tests.
 
 ### How to run
 
@@ -103,6 +103,110 @@ Returns the teachers from a given subject. Subject parameter is required. Return
         "teachers": [
             "João branco",
             "José Amarelo"
+        ]
+    }
+
+</details>
+
+<details>
+<summary>GET /provas/professores</summary>
+Returns an array with the amount of exams by each teacher in the following format
+
+    [
+        {
+            "id": 1,
+            "name": "João branco",
+            "amount": 9
+        },
+        {
+            "id": 2,
+            "name": "José Amarelo",
+            "amount": 1
+        }
+    ]
+
+</details>
+
+<details>
+<summary>GET /provas/professores/:teaId</summary>
+Returns the exams of a given teacher grouped by category in the following format
+
+    {
+        "teacher": "José Amarelo",
+        "info": [
+            {
+                "category": "P2",
+                "exams": [
+                    {
+                        "name": "2020.2",
+                        "subject": "Álgebra Linear",
+                        "link": "https://raw.githubusercontent.com/ontiyonke/book-1/master/%5BPROGRAMMING%5D%5BClean%20Code%20by%20Robert%20C%20Martin%5D.pdf"
+                    }
+                ]
+            }
+        ]
+    }
+
+</details>
+
+<details>
+<summary>GET /provas/disciplinas</summary>
+Returns an array with the amount of exams by each subject grouped by semesters in the following format
+
+    [
+        {
+            "id": 1,
+            "semester": "1º",
+            "exams": [
+                {
+                    "id": 1,
+                    "subject": "Cálculo I",
+                    "amount": 6
+                },
+                {
+                    "id": 4,
+                    "subject": "Mecânica Quântica",
+                    "amount": 2
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "semester": "2º",
+            "exams": [
+                {
+                    "id": 1,
+                    "subject": "Cálculo I",
+                    "amount": 1
+                },
+                {
+                    "id": 2,
+                    "subject": "Álgebra Linear",
+                    "amount": 1
+                }
+            ]
+        }
+    ]
+
+</details>
+
+<details>
+<summary>GET /provas/disciplinas/:semId/:subId</summary>
+Returns the exams of a given semester and subject grouped by category in the following format
+
+    {
+        "subject": "Cálculo I",
+        "info": [
+            {
+                "category": "P1",
+                "exams": [
+                    {
+                        "name": "testando",
+                        "teacher": "João branco",
+                        "link": "https://eloquentjavascript.net/Eloquent_JavaScript.pdf"
+                    }
+                ]
+            }
         ]
     }
 
