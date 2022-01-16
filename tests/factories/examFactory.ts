@@ -1,4 +1,4 @@
-import faker from 'faker';
+import faker from '@faker-js/faker';
 import { getRepository } from 'typeorm';
 import { CategoryEntity } from '../../src/entities/CategoryEntity';
 import { SemesterEntity } from '../../src/entities/SemesterEntity';
